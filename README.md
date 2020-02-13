@@ -22,6 +22,13 @@
    4-2. pygame 화면 설정
    4-3. 사용자 행위
 
+### 2) screen에 블럭 그리기
+
+> [참고자료] (https://python.bakyeono.net/chapter-12-1.html)
+
+1. `block = pygame.Rect((coord_x, coord_y), (width, height))` 인스턴스 생성
+2. `pygame.ddraw.rect(screen, color, block)` : screen의 position 위치에 color 색으로 블록을 그립니다.
+
 ## 2. 게임 구현
 
 ### 1) 필요 기능
