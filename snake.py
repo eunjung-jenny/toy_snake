@@ -71,7 +71,8 @@ while not done:
     clock.tick(10) 
     
     screen.fill(GRAY)
-    # [y, x]
+    
+    # 아무 이벤트(키보드 입력)가 발생하지 않은 경우를 표시
     is_event = False
 
     
@@ -83,6 +84,7 @@ while not done:
             done = True
         # 키보드가 눌렸다면
         elif event.type == pg.KEYDOWN:
+            # 기존 진행방향의 반대 방향으로 키보드를 누른 경우가 아닌 경우
             if (not (current_direction == 'DOWN' and event.key == pg.K_UP)) and (not (current_direction == 'UP' and event.key == pg.K_DOWN)) and (not (current_direction == 'LEFT' and event.key == pg.K_RIGHT)) and (not (current_direction == 'RIGHT' and event.key == pg.K_LEFT)):
                 last_block = snake[-1]
                 is_event = True
@@ -102,6 +104,7 @@ while not done:
                 elif event.key == pg.K_RIGHT:
                     current_direction = 'RIGHT'
                     snake[0][0] += 1
+            # 기존 진행방향의 반대 방향으로 키보드를 누른 경우에는 해당 이벤트를 무시
             else:
                 last_block = snake[-1]
                 for i in range(len(snake)-1, 0, -1):
@@ -116,6 +119,8 @@ while not done:
                     snake[0][0] -= 1
                 elif current_direction == 'RIGHT':
                     snake[0][0] += 1
+    
+    # 아무 이벤트가 발생하지 않은 경우에는 기존 진행방향으로 진행
     if not is_event:
         last_block = snake[-1]
         for i in range(len(snake)-1, 0, -1):
