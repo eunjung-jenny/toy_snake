@@ -46,6 +46,7 @@ clock = pg.time.Clock()
 # blocks = [[5, 5]]
 snake = [[5, 5]]
 last_block = snake[-1]
+current_direction = None
 
 font = pg.font.SysFont('comicsans', 20, True)
 
@@ -81,19 +82,25 @@ while not done:
             done = True
         # 키보드가 눌렸다면
         elif event.type == pg.KEYDOWN:
-            last_block = snake[-1]
-            for i in range(len(snake)-1, 0, -1):
-                snake[i] = snake[i-1][:]
-                
-            # 어떤 키보드가 눌렸는지에 따라
-            if event.key == pg.K_UP:
-                snake[0][1] -= 1
-            elif event.key == pg.K_DOWN:
-                snake[0][1] += 1
-            elif event.key == pg.K_LEFT:
-                snake[0][0] -= 1
-            elif event.key == pg.K_RIGHT:
-                snake[0][0] += 1
+            # if not ((event.key == pg.K_UP and current_direction == 'DOWN') or (event.key == pg.K_DOWN and current_direction == 'UP') or (event.key == pg.K_LEFT and current_direction != 'RIGHT') or (event.key == pg.K_RIGHT and current_direction != 'LEFT')): 
+            if (not (current_direction == 'DOWN' and event.key == pg.K_UP)) and (not (current_direction == 'UP' and event.key == pg.K_DOWN)) and (not (current_direction == 'LEFT' and event.key == pg.K_RIGHT)) and (not (current_direction == 'RIGHT' and event.key == pg.K_LEFT)):
+                last_block = snake[-1]
+                for i in range(len(snake)-1, 0, -1):
+                    snake[i] = snake[i-1][:]
+                    
+                # 어떤 키보드가 눌렸는지에 따라
+                if event.key == pg.K_UP:
+                    current_direction = 'UP'
+                    snake[0][1] -= 1
+                elif event.key == pg.K_DOWN:
+                    current_direction = 'DOWN'
+                    snake[0][1] += 1
+                elif event.key == pg.K_LEFT:
+                    current_direction = 'LEFT'
+                    snake[0][0] -= 1
+                elif event.key == pg.K_RIGHT:
+                    current_direction = 'RIGHT'
+                    snake[0][0] += 1
             
             # 화면 밖으로 이동해서 게임오버
             if not (0 <= snake[0][0] <= MAX_X and 0 <= snake[0][1] <= MAX_Y):
