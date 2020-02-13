@@ -32,7 +32,7 @@ extension = False
 done = False
 clock = pg.time.Clock()
 # blocks = [[5, 5]]
-blocks = [[5, 5], [5, 6], [5, 7]]
+blocks = [[5, 5], [5, 6], [5, 7], [5, 8], [5, 9], [5, 10], [5, 11], [5, 12], [5, 13]]
 print(blocks)
 
 def get_apple_coord():
@@ -72,6 +72,8 @@ while not done:
             elif event.key == pg.K_RIGHT:
                 blocks[0][0] += 1
             if not (0 <= blocks[0][0] <= MAX_X and 0 <= blocks[0][1] <= MAX_Y):
+                done = True
+            if blocks[0] in blocks[1:]:
                 done = True
 
     # 사과를 먹었을 때
