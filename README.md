@@ -40,6 +40,7 @@
    1. [각 키보드 버튼에 대한  pygame 상수명](https://www.pygame.org/docs/ref/key.html)
 
 ### 4) screen에 점수 표시
+> [참고자료](https://techwithtim.net/tutorials/game-development-with-python/pygame-tutorial/scoring-health-bars/)
 1. `font = pygame.font.SysFont('폰트명', 폰트사이즈, 볼드 표시 여부)` 폰트 객체 생성
 2. `text = font.render("Score: " + str(score), 1, RGB색상)` 렌더링 (인자: 텍스트, 가장자리 부드럽게(anti-aliasing), 색상)
 3. `screen.blit(text, (coord_x, coord_y))` 화면에 표시
@@ -56,7 +57,7 @@
 - [x] 뱀의 이동
    - [x] 머리 이동
    - [x] 몸통 이동
-   - [] 자동 이동
+   - [x] 자동 이동
    - [x] 머리 색상 다르게 표현
    - [x] 진행 방향의 반대 방향 키보드 입력 무시
 - [] 랜덤한 시간, 랜덤한 위치에 먹이 생성

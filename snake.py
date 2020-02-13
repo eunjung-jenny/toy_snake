@@ -72,8 +72,9 @@ while not done:
     
     screen.fill(GRAY)
     # [y, x]
-    
+    is_event = False
 
+    
     # 게임 실행 중 발생하는 이벤트를 포착
     ## 게임 종료 이벤트가 발생하면 메인 루프 종료하도록 처리
     for event in pg.event.get():
@@ -82,12 +83,12 @@ while not done:
             done = True
         # 키보드가 눌렸다면
         elif event.type == pg.KEYDOWN:
-            # if not ((event.key == pg.K_UP and current_direction == 'DOWN') or (event.key == pg.K_DOWN and current_direction == 'UP') or (event.key == pg.K_LEFT and current_direction != 'RIGHT') or (event.key == pg.K_RIGHT and current_direction != 'LEFT')): 
             if (not (current_direction == 'DOWN' and event.key == pg.K_UP)) and (not (current_direction == 'UP' and event.key == pg.K_DOWN)) and (not (current_direction == 'LEFT' and event.key == pg.K_RIGHT)) and (not (current_direction == 'RIGHT' and event.key == pg.K_LEFT)):
                 last_block = snake[-1]
+                is_event = True
                 for i in range(len(snake)-1, 0, -1):
                     snake[i] = snake[i-1][:]
-                    
+                
                 # 어떤 키보드가 눌렸는지에 따라
                 if event.key == pg.K_UP:
                     current_direction = 'UP'
@@ -101,13 +102,42 @@ while not done:
                 elif event.key == pg.K_RIGHT:
                     current_direction = 'RIGHT'
                     snake[0][0] += 1
+            else:
+                last_block = snake[-1]
+                for i in range(len(snake)-1, 0, -1):
+                    snake[i] = snake[i-1][:]
+                        
+                # 기존 진행방향에 따라
+                if current_direction == 'UP':
+                    snake[0][1] -= 1
+                elif current_direction == 'DOWN':
+                    snake[0][1] += 1
+                elif current_direction == 'LEFT':
+                    snake[0][0] -= 1
+                elif current_direction == 'RIGHT':
+                    snake[0][0] += 1
+    if not is_event:
+        last_block = snake[-1]
+        for i in range(len(snake)-1, 0, -1):
+            snake[i] = snake[i-1][:]
+                
+        # 기존 진행방향에 따라
+        if current_direction == 'UP':
+            snake[0][1] -= 1
+        elif current_direction == 'DOWN':
+            snake[0][1] += 1
+        elif current_direction == 'LEFT':
+            snake[0][0] -= 1
+        elif current_direction == 'RIGHT':
+            snake[0][0] += 1
+        
             
-            # 화면 밖으로 이동해서 게임오버
-            if not (0 <= snake[0][0] <= MAX_X and 0 <= snake[0][1] <= MAX_Y):
-                done = True
-            # 몸통과 부딪혀서 게임오버
-            if snake[0] in snake[1:]:
-                done = True
+    # 화면 밖으로 이동해서 게임오버
+    if not (0 <= snake[0][0] <= MAX_X and 0 <= snake[0][1] <= MAX_Y):
+        done = True
+    # 몸통과 부딪혀서 게임오버
+    if snake[0] in snake[1:]:
+        done = True
 
     # 사과를 먹었을 때
     if apple and snake[0] == apple[0]:
