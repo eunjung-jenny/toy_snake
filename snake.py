@@ -32,7 +32,8 @@ extension = False
 done = False
 clock = pg.time.Clock()
 # blocks = [[5, 5]]
-blocks = [[5, 5], [5, 6], [5, 7], [5, 8], [5, 9], [5, 10], [5, 11], [5, 12], [5, 13]]
+blocks = [[5, 5]]
+last_block = blocks[-1]
 print(blocks)
 
 def get_apple_coord():
@@ -62,9 +63,10 @@ while not done:
             done = True
         # 키보드가 눌렸다면
         elif event.type == pg.KEYDOWN:
+            last_block = blocks[-1]
             for i in range(len(blocks)-1, 0, -1):
                 blocks[i] = blocks[i-1][:]
-
+                
             # 어떤 키보드가 눌렸는지에 따라
             if event.key == pg.K_UP:
                 blocks[0][1] -= 1
@@ -85,6 +87,7 @@ while not done:
     # 사과를 먹었을 때
     if apple and blocks[0] == apple[0]:
         apple.clear()      
+        blocks.append(last_block)
 
     draw_block(screen, GREEN, blocks)
     
