@@ -47,6 +47,8 @@ clock = pg.time.Clock()
 snake = [[5, 5]]
 last_block = snake[-1]
 
+font = pg.font.SysFont('comicsans', 20, True)
+
 def get_apple_coord():
     x = randint(0, MAX_X)
     y = randint(0, MAX_Y)
@@ -56,6 +58,11 @@ def get_apple_coord():
     # apple = pg.Rect((x, y), (BLOCK_SIZE, BLOCK_SIZE))
     # pg.draw.rect(screen, RED, apple)
     return [x, y]
+
+def paint_score(snake, screen):
+    score = len(snake)
+    text = font.render("Score: " + str(score), 1, (0, 0, 0))
+    screen.blit(text, (320, 10))
 
 
 while not done:
@@ -107,6 +114,8 @@ while not done:
         apple.append(get_apple_coord())
     
     draw_apple(screen, apple)
+
+    paint_score(snake, screen)
 
     # 메인 루프의 끝에 반드시 display.flip()을 통해 메인 루프에서 진행된 작업을 화면에 업데이트 해주어야 함
     pg.display.flip()
