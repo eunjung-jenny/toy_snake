@@ -71,8 +71,11 @@ while not done:
                 blocks[0][0] -= 1
             elif event.key == pg.K_RIGHT:
                 blocks[0][0] += 1
+            
+            # 화면 밖으로 이동해서 게임오버
             if not (0 <= blocks[0][0] <= MAX_X and 0 <= blocks[0][1] <= MAX_Y):
                 done = True
+            # 몸통과 부딪혀서 게임오버
             if blocks[0] in blocks[1:]:
                 done = True
 
