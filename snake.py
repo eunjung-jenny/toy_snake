@@ -64,6 +64,12 @@ while not done:
             elif event.key == pg.K_RIGHT:
                 blocks[0][0] += 1
 
+    # 사과를 먹었을 때
+    if apple and blocks[0] == apple[0]:
+        apple.clear()
+        print(apple)
+        
+
     draw_block(screen, GREEN, blocks)
     
     # screen에 사과가 없을 때에만 새로운 사과를 생성
