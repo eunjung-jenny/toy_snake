@@ -31,7 +31,9 @@ apple = []
 extension = False
 done = False
 clock = pg.time.Clock()
-blocks = [[5, 5]]
+# blocks = [[5, 5]]
+blocks = [[5, 5], [5, 6], [5, 7]]
+print(blocks)
 
 def get_apple_coord():
     x = randint(0, MAX_X)
@@ -57,6 +59,9 @@ while not done:
             done = True
         # 키보드가 눌렸다면
         elif event.type == pg.KEYDOWN:
+            for i in range(len(blocks)-1, 0, -1):
+                blocks[i] = blocks[i-1][:]
+
             # 어떤 키보드가 눌렸는지에 따라
             if event.key == pg.K_UP:
                 blocks[0][1] -= 1
