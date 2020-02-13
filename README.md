@@ -29,6 +29,17 @@
 1. `block = pygame.Rect((coord_x, coord_y), (width, height))` 인스턴스 생성
 2. `pygame.ddraw.rect(screen, color, block)` : screen의 position 위치에 color 색으로 블록을 그립니다.
 
+### 3) pygame event list
+
+> [참고자료] (https://kkamikoon.tistory.com/132)
+
+- 아래의 이벤트명들은 `pygame.이벤트명` 의 형식으로 사용한다.
+- 이벤트를 확인할 때는 `if event.type == pygame.이벤트명` 으로 체크한다.
+1. QUIT : 
+2. KEYDOWN: 키보드를 누른 후 떼는 순간에 발생 | KEYUP : 키보드를 누르는 순간에 발생
+   1. [각 키보드 버튼에 대한  pygame 상수명](https://www.pygame.org/docs/ref/key.html)
+
+
 ## 2. 게임 구현
 
 ### 1) 필요 기능

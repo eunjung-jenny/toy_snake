@@ -27,22 +27,34 @@ def draw_block(screen, color, blocks):
 
 done = False
 clock = pg.time.Clock()
+blocks = [[5, 5]]
 
 while not done:
     # 1초당 화면 출력 횟수 (10, 30 60 정도로 설정)
     clock.tick(10) 
     
+    screen.fill(WHITE)
+    # [y, x]
+    
+
     # 게임 실행 중 발생하는 이벤트를 포착
     ## 게임 종료 이벤트가 발생하면 메인 루프 종료하도록 처리
     for event in pg.event.get():
         # 게임 실행 창의 종료 버튼 클릭시
         if event.type == pg.QUIT:
             done = True
+        # 키보드가 눌렸다면
+        elif event.type == pg.KEYDOWN:
+            # 어떤 키보드가 눌렸는지에 따라
+            if event.key == pg.K_UP:
+                blocks[0][1] -= 1
+            elif event.key == pg.K_DOWN:
+                blocks[0][1] += 1
+            elif event.key == pg.K_LEFT:
+                blocks[0][0] -= 1
+            elif event.key == pg.K_RIGHT:
+                blocks[0][0] += 1
 
-    # 화면 배경 색상 설정
-    screen.fill(WHITE)
-
-    blocks = [(0, 0)]
     draw_block(screen, GREEN, blocks)
     
     '''
