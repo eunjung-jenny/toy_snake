@@ -13,6 +13,8 @@ SCREEN_HEIGHT = 300
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 BLOCK_SIZE = 20
+MAX_X = SCREEN_WIDTH // BLOCK_SIZE - 1
+MAX_Y = SCREEN_HEIGHT // BLOCK_SIZE - 1
 
 # 게임 창의 이름 설정
 pg.display.set_caption("Snake")
@@ -26,13 +28,14 @@ def draw_block(screen, color, blocks):
         pg.draw.rect(screen, color, block)
 
 apple = []
+extension = False
 done = False
 clock = pg.time.Clock()
 blocks = [[5, 5]]
 
 def get_apple_coord():
-    x = randint(0, 19)
-    y = randint(0, 14)
+    x = randint(0, MAX_X)
+    y = randint(0, MAX_Y)
     # apple = pg.Rect((x, y), (BLOCK_SIZE, BLOCK_SIZE))
     # pg.draw.rect(screen, RED, apple)
     return [x, y]
@@ -63,12 +66,12 @@ while not done:
                 blocks[0][0] -= 1
             elif event.key == pg.K_RIGHT:
                 blocks[0][0] += 1
+            if not (0 <= blocks[0][0] <= MAX_X and 0 <= blocks[0][1] <= MAX_Y):
+                done = True
 
     # 사과를 먹었을 때
     if apple and blocks[0] == apple[0]:
-        apple.clear()
-        print(apple)
-        
+        apple.clear()      
 
     draw_block(screen, GREEN, blocks)
     
