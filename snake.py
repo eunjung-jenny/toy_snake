@@ -1,4 +1,5 @@
 import pygame as pg
+from random import randint
  
 pg.init()
 
@@ -24,10 +25,18 @@ def draw_block(screen, color, blocks):
         block = pg.Rect((y*BLOCK_SIZE, x*BLOCK_SIZE), (BLOCK_SIZE, BLOCK_SIZE))
         pg.draw.rect(screen, color, block)
 
-
+apple = []
 done = False
 clock = pg.time.Clock()
 blocks = [[5, 5]]
+
+def get_apple_coord():
+    x = randint(0, 19)
+    y = randint(0, 14)
+    # apple = pg.Rect((x, y), (BLOCK_SIZE, BLOCK_SIZE))
+    # pg.draw.rect(screen, RED, apple)
+    return [x, y]
+
 
 while not done:
     # 1초당 화면 출력 횟수 (10, 30 60 정도로 설정)
@@ -57,9 +66,11 @@ while not done:
 
     draw_block(screen, GREEN, blocks)
     
-    '''
-    작업
-    '''
+    # screen에 사과가 없을 때에만 새로운 사과를 생성
+    if not apple:
+        apple.append(get_apple_coord())
+    
+    draw_block(screen, RED, apple)
 
     # 메인 루프의 끝에 반드시 display.flip()을 통해 메인 루프에서 진행된 작업을 화면에 업데이트 해주어야 함
     pg.display.flip()
