@@ -38,6 +38,9 @@ print(blocks)
 def get_apple_coord():
     x = randint(0, MAX_X)
     y = randint(0, MAX_Y)
+    while [x, y] in blocks:
+        x = randint(0, MAX_X)
+        y = randint(0, MAX_Y)
     # apple = pg.Rect((x, y), (BLOCK_SIZE, BLOCK_SIZE))
     # pg.draw.rect(screen, RED, apple)
     return [x, y]
