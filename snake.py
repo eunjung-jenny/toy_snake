@@ -29,11 +29,11 @@ apple = []
 extension = False
 done = False
 
+
 # blocks = [[5, 5]]
-snake = [[5, 5], [5, 6]]
-last_block = snake[-1]
+snake = [[5, 5]]
+tail = [None, None]
 current_direction = 'RIGHT'
-is_growing = [False]
 
 def paint_score(snake, screen):
     score = len(snake)
@@ -56,18 +56,13 @@ def pause():
                 quit_game()
     print(snake)
 
-def move_snake(direction, grow):
-    tail = snake[-1]
-    # last_block[0] = snake[-1][0]
-    # last_block[1] = snake[-1][1]
+def move_snake(direction):
+    tail[0] = snake[-1][0]
+    tail[1] = snake[-1][1]
+
     for i in range(len(snake)-1, 0, -1):
         snake[i] = snake[i-1][:]
-    
-    if grow:
-        snake.append(tail)
-        print('성장한다아')
-        is_growing[0] = False            
-    # 기존 진행방향에 따라
+           
     if direction == 'UP':
         snake[0][1] -= 1
     elif direction == 'DOWN':
@@ -144,6 +139,12 @@ def is_over():
     else:
         return False
 
+def eat_n_grow():
+    if apple and snake[0] == apple[0]:    
+        apple.clear()      
+        snake.append(tail)
+
+
 while True:
     # 1초당 화면 출력 횟수 (10, 30 60 정도로 설정)
     clock.tick(10) 
@@ -160,13 +161,9 @@ while True:
             elif event.key in DIRECTION_KEYS and is_valid_change(current_direction, event.key):
                 current_direction = change_direction(event.key)
             
-    move_snake(current_direction, is_growing[0])
+    move_snake(current_direction)
     
-    if apple and snake[0] == apple[0]:
-        print('사과를 먹었다! 사과의 위치는 ', end = '')
-        print(apple)
-        apple.clear()      
-        is_growing[0] = True
+    eat_n_grow()        
 
     draw_snake(screen, snake)    
             
