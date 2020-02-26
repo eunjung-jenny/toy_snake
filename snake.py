@@ -137,41 +137,47 @@ def eat_n_grow():
         apple.clear()      
         snake.append(tail)
 
+def paint_text():
+    font = pg.font.SysFont('comicsans', 50)
+    title = font.render('SNAKE', 1, BLACK)
+    titlepos = title.get_rect()
+    titlepos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+    screen.blit(title, titlepos)
+    
+    font = pg.font.SysFont('comicsans', 25)
+    start = font.render('Press ARROW BUTTONS to start!', 1, RED)
+    startpos = start.get_rect()
+    startpos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2+40)
+    screen.blit(start, startpos)
+
+
 def game_intro():
     intro = True
 
     while intro:
         clock.tick(10)
+        # screen.fill(WHITE)
+        paint_text()
+        pg.display.flip()
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 quit_game()
-            elif event.type == pg.KEYDOWN:
-                if event.key in PAUSE_KEYS:
-                    intro = False
-        
-        screen.fill(WHITE)
-        font = pg.font.SysFont('comicsans', 50)
-        title = font.render('SNAKE', 1, BLACK)
-        titlepos = title.get_rect()
-        titlepos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
-        screen.blit(title, titlepos)
-        
-        font = pg.font.SysFont('comicsans', 25)
-        start = font.render('Press SPACE to start!', 1, RED)
-        startpos = start.get_rect()
-        startpos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2+40)
-        screen.blit(start, startpos)
-        pg.display.flip()
+            elif event.type == pg.KEYDOWN and event.key in DIRECTION_KEYS:
+                intro = False
+                return change_direction(event.key)    
 
 def game_loop():
     
-    current_direction = 'RIGHT'
+    screen.fill(GRAY)
+    paint_score(snake, screen)
+    draw_snake(screen, snake)    
+    current_direction = game_intro()
 
     while True:
         # 1초당 화면 출력 횟수 (10, 30 60 정도로 설정)
         clock.tick(10) 
-        screen.fill(GRAY)
+        screen.fill(GRAY) 
         
         # 게임 실행 중 발생하는 이벤트를 포착
         for event in pg.event.get():
@@ -203,7 +209,7 @@ def game_loop():
         # 메인 루프의 끝에 반드시 display.flip()을 통해 메인 루프에서 진행된 작업을 화면에 업데이트 해주어야 함
         pg.display.flip()
 
-game_intro()
+# game_intro()
 game_loop()
 
 pg.quit()
