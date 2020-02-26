@@ -24,20 +24,13 @@ font = pg.font.SysFont('comicsans', 20, True)
 clock = pg.time.Clock()
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-# 게임 창의 이름 설정
 apple = []
-extension = False
-done = False
-
-
-# blocks = [[5, 5]]
 snake = [[5, 5]]
 tail = [None, None]
-current_direction = 'RIGHT'
 
 def paint_score(snake, screen):
     score = len(snake)
-    text = font.render("Score: " + str(score), 1, (0, 0, 0))
+    text = font.render("Score: " + str(score), 1, BLACK)
     screen.blit(text, (320, 10))
 
 def quit_game():
@@ -95,13 +88,13 @@ def change_direction(key):
         return 'RIGHT'
 
 def is_valid_change(direction, key):
-    if current_direction == 'DOWN' and key == pg.K_UP:
+    if direction == 'DOWN' and key == pg.K_UP:
         return False
-    elif current_direction == 'UP' and key == pg.K_DOWN:
+    elif direction == 'UP' and key == pg.K_DOWN:
         return False
-    elif current_direction == 'LEFT' and key == pg.K_RIGHT:
+    elif direction == 'LEFT' and key == pg.K_RIGHT:
         return False
-    elif current_direction == 'RIGHT' and key == pg.K_LEFT:
+    elif direction == 'RIGHT' and key == pg.K_LEFT:
         return False
     else:
         return True
@@ -144,40 +137,73 @@ def eat_n_grow():
         apple.clear()      
         snake.append(tail)
 
+def game_intro():
+    intro = True
 
-while True:
-    # 1초당 화면 출력 횟수 (10, 30 60 정도로 설정)
-    clock.tick(10) 
-    screen.fill(GRAY)
+    while intro:
+        clock.tick(10)
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                quit_game()
+            elif event.type == pg.KEYDOWN:
+                if event.key in PAUSE_KEYS:
+                    intro = False
+        
+        screen.fill(WHITE)
+        font = pg.font.SysFont('comicsans', 50)
+        title = font.render('SNAKE', 1, BLACK)
+        titlepos = title.get_rect()
+        titlepos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        screen.blit(title, titlepos)
+        
+        font = pg.font.SysFont('comicsans', 25)
+        start = font.render('Press SPACE to start!', 1, RED)
+        startpos = start.get_rect()
+        startpos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2+40)
+        screen.blit(start, startpos)
+        pg.display.flip()
+
+def game_loop():
     
-    # 게임 실행 중 발생하는 이벤트를 포착
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
+    current_direction = 'RIGHT'
+
+    while True:
+        # 1초당 화면 출력 횟수 (10, 30 60 정도로 설정)
+        clock.tick(10) 
+        screen.fill(GRAY)
+        
+        # 게임 실행 중 발생하는 이벤트를 포착
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                quit_game()
+
+            elif event.type == pg.KEYDOWN:
+                if event.key in PAUSE_KEYS:
+                    pause()
+                elif event.key in DIRECTION_KEYS and is_valid_change(current_direction, event.key):
+                    current_direction = change_direction(event.key)
+                
+        move_snake(current_direction)
+        
+        eat_n_grow()        
+
+        draw_snake(screen, snake)    
+                
+        if is_over():
             quit_game()
+        
+        if not apple:
+            put_apple()
+        if apple:
+            draw_apple(apple[0])
 
-        elif event.type == pg.KEYDOWN:
-            if event.key in PAUSE_KEYS:
-                pause()
-            elif event.key in DIRECTION_KEYS and is_valid_change(current_direction, event.key):
-                current_direction = change_direction(event.key)
-            
-    move_snake(current_direction)
-    
-    eat_n_grow()        
+        paint_score(snake, screen)
 
-    draw_snake(screen, snake)    
-            
-    if is_over():
-        quit_game()
-    
-    if not apple:
-        put_apple()
-    if apple:
-        draw_apple(apple[0])
+        # 메인 루프의 끝에 반드시 display.flip()을 통해 메인 루프에서 진행된 작업을 화면에 업데이트 해주어야 함
+        pg.display.flip()
 
-    paint_score(snake, screen)
-
-    # 메인 루프의 끝에 반드시 display.flip()을 통해 메인 루프에서 진행된 작업을 화면에 업데이트 해주어야 함
-    pg.display.flip()
+game_intro()
+game_loop()
 
 pg.quit()
