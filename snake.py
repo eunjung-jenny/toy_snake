@@ -25,7 +25,7 @@ clock = pg.time.Clock()
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 apple = []
-snake = [[5, 5]]
+snake = []
 tail = [None, None]
 
 def paint_score(snake, screen):
@@ -70,8 +70,9 @@ def draw_snake(screen, snake):
     """ screen의 position 위치에 color 색으로 블록을 그립니다. """
     # snake : [(y, x), ...]
     # pg.Rect 인스턴스 ((x, y), (w, h))
-    head = pg.Rect((snake[0][0]*BLOCK_SIZE, snake[0][1]*BLOCK_SIZE), (BLOCK_SIZE, BLOCK_SIZE))
-    pg.draw.rect(screen, D_GREEN, head)
+    if snake:
+        head = pg.Rect((snake[0][0]*BLOCK_SIZE, snake[0][1]*BLOCK_SIZE), (BLOCK_SIZE, BLOCK_SIZE))
+        pg.draw.rect(screen, D_GREEN, head)
     if len(snake) > 1:
         for y, x in snake[1:]:
             block = pg.Rect((y*BLOCK_SIZE, x*BLOCK_SIZE), (BLOCK_SIZE, BLOCK_SIZE))
@@ -137,27 +138,62 @@ def eat_n_grow():
         apple.clear()      
         snake.append(tail)
 
-def paint_text():
-    font = pg.font.SysFont('comicsans', 50)
-    title = font.render('SNAKE', 1, BLACK)
-    titlepos = title.get_rect()
-    titlepos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
-    screen.blit(title, titlepos)
-    
-    font = pg.font.SysFont('comicsans', 25)
-    start = font.render('Press ARROW BUTTONS to start!', 1, RED)
-    startpos = start.get_rect()
-    startpos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2+40)
-    screen.blit(start, startpos)
+def paint_text(command):
+    global snake
+    if command == "intro":
+        font = pg.font.SysFont('comicsans', 50)
+        title = font.render('SNAKE', 1, BLACK)
+        titlepos = title.get_rect()
+        titlepos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        screen.blit(title, titlepos)
+        
+        font = pg.font.SysFont('comicsans', 25)
+        start = font.render('Press ARROW BUTTONS to start!', 1, RED)
+        startpos = start.get_rect()
+        startpos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2+40)
+        screen.blit(start, startpos)
+
+    elif command == "game_over":
+        font = pg.font.SysFont('comicsans', 50)
+        title = font.render(f'Your score: {len(snake)}', 1, BLACK)
+        titlepos = title.get_rect()
+        titlepos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        screen.blit(title, titlepos)
+
+        font = pg.font.SysFont('comicsans', 25)
+        start = font.render('Press ENTER to restart!', 1, RED)
+        startpos = start.get_rect()
+        startpos.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2+40)
+        screen.blit(start, startpos)
+
+def game_over_screen():
+    game_over = True
+
+    while game_over:
+        clock.tick(10)
+        paint_text("game_over")
+        pg.display.flip()
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                quit_game()
+            elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
+                game_over = False
+                game_intro()
 
 
 def game_intro():
+    global snake
+    snake = [[5, 5]]
+    screen.fill(GRAY)
+    draw_snake(screen, snake)
+    paint_score(snake, screen) 
     intro = True
 
     while intro:
         clock.tick(10)
         # screen.fill(WHITE)
-        paint_text()
+        paint_text("intro")
         pg.display.flip()
 
         for event in pg.event.get():
@@ -168,10 +204,6 @@ def game_intro():
                 return change_direction(event.key)    
 
 def game_loop():
-    
-    screen.fill(GRAY)
-    paint_score(snake, screen)
-    draw_snake(screen, snake)    
     current_direction = game_intro()
 
     while True:
@@ -197,7 +229,8 @@ def game_loop():
         draw_snake(screen, snake)    
                 
         if is_over():
-            quit_game()
+            game_over_screen()
+            # game_loop()
         
         if not apple:
             put_apple()
