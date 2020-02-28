@@ -43,7 +43,6 @@ def quit_game():
     quit()
 
 def pause():
-    print(snake)
     pause = True
     while pause:
         for event in pg.event.get():
@@ -51,7 +50,6 @@ def pause():
                 pause = False
             if event.type == pg.QUIT:
                 quit_game()
-    print(snake)
 
 def move_snake(direction):
     tail[0] = snake[-1][0]
@@ -68,7 +66,6 @@ def move_snake(direction):
         snake[0][0] -= 1
     elif direction == 'RIGHT':
         snake[0][0] += 1
-    # print(snake[0], direction)
 
 def draw_snake(screen, snake):
     """ screen의 position 위치에 color 색으로 블록을 그립니다. """
@@ -129,12 +126,9 @@ def put_apple():
 def is_over():
     if not (0 <= snake[0][0] <= MAX_X and 0 <= snake[0][1] <= MAX_Y):
         pg.mixer.Sound.play(SCREAM_SOUND)
-        # print('뱀이 화면 밖으로 탈출했습니다!')
         return True
     elif snake[0] in snake[1:]:
         pg.mixer.Sound.play(SCREAM_SOUND)
-        # print(snake)
-        # print('뱀이 자기 몸을 먹었습니다!')
         return True
     else:
         return False
@@ -226,7 +220,6 @@ def game_loop():
                 quit_game()
 
             elif event.type == pg.KEYDOWN:
-                print(event.key)
                 if event.key in PAUSE_KEYS:
                     pause()
                 elif event.key in DIRECTION_KEYS and is_valid_change(current_direction, event.key):
