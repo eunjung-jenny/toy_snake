@@ -2,6 +2,8 @@ import sys
 import pygame as pg
 from random import randint
 
+pg.init()
+
 WHITE =   (255, 255, 255)
 BLACK =   (  0,   0,   0)
 GRAY =    (202, 204, 203)
@@ -18,8 +20,10 @@ BLOCK_SIZE = 20
 MAX_X = SCREEN_WIDTH // BLOCK_SIZE - 1
 MAX_Y = SCREEN_HEIGHT // BLOCK_SIZE - 1
 
-pg.init()
-pg.display.set_caption("Snake")
+YUMMY_SOUND = pg.mixer.Sound('apple_crunch.wav')
+SCREAM_SOUND = pg.mixer.Sound('game_over.wav')
+
+pg.display.set_caption('Snake')
 font = pg.font.SysFont('comicsans', 20, True)
 clock = pg.time.Clock()
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -64,7 +68,7 @@ def move_snake(direction):
         snake[0][0] -= 1
     elif direction == 'RIGHT':
         snake[0][0] += 1
-    print(snake[0], direction)
+    # print(snake[0], direction)
 
 def draw_snake(screen, snake):
     """ screen의 position 위치에 color 색으로 블록을 그립니다. """
@@ -124,17 +128,20 @@ def put_apple():
 
 def is_over():
     if not (0 <= snake[0][0] <= MAX_X and 0 <= snake[0][1] <= MAX_Y):
-        print('뱀이 화면 밖으로 탈출했습니다!')
+        pg.mixer.Sound.play(SCREAM_SOUND)
+        # print('뱀이 화면 밖으로 탈출했습니다!')
         return True
     elif snake[0] in snake[1:]:
-        print(snake)
-        print('뱀이 자기 몸을 먹었습니다!')
+        pg.mixer.Sound.play(SCREAM_SOUND)
+        # print(snake)
+        # print('뱀이 자기 몸을 먹었습니다!')
         return True
     else:
         return False
 
 def eat_n_grow():
     if apple and snake[0] == apple[0]:    
+        pg.mixer.Sound.play(YUMMY_SOUND)
         apple.clear()      
         snake.append(tail)
 
@@ -167,6 +174,7 @@ def paint_text(command):
         screen.blit(start, startpos)
 
 def game_over_screen():
+    pg.mixer.music.stop()
     game_over = True
 
     while game_over:
@@ -179,8 +187,7 @@ def game_over_screen():
                 quit_game()
             elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
                 game_over = False
-                game_intro()
-
+                game_loop()
 
 def game_intro():
     global snake
@@ -204,6 +211,8 @@ def game_intro():
                 return change_direction(event.key)    
 
 def game_loop():
+    pg.mixer.music.load('bgm.mp3')
+    pg.mixer.music.play(-1)
     current_direction = game_intro()
 
     while True:
@@ -217,6 +226,7 @@ def game_loop():
                 quit_game()
 
             elif event.type == pg.KEYDOWN:
+                print(event.key)
                 if event.key in PAUSE_KEYS:
                     pause()
                 elif event.key in DIRECTION_KEYS and is_valid_change(current_direction, event.key):
